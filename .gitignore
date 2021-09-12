@@ -10,6 +10,7 @@ Thumbs.db
 .vscode/
 /backend/venv/
 venv/
+**/venv
 __pycache__/
 migrations/
 
