@@ -8,6 +8,7 @@ ehthumbs.db
 Thumbs.db
 
 .vscode/
+backend/venv/
 venv/
 __pycache__/
 migrations/
