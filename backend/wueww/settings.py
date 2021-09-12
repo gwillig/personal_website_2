@@ -9,23 +9,21 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-import dotenv
-from pathlib import Path
-import os
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-dotenv_file = os.path.join(BASE_DIR, ".env")
-if os.path.isfile(dotenv_file):
-    config = dotenv.load_dotenv(dotenv_file)
-    config = dotenv.dotenv_values(".env")
-else:
-    config = os.environ
+import os
+import environ
+
+env = environ.Env()
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config["SECRET_KEY"]
+SECRET_KEY = env("DJANGO_SECRET_KEY", default="change-me")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -85,7 +83,7 @@ WSGI_APPLICATION = "wueww.wsgi.application"
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    "default": config["DATABASE_URL"]
+    "default": env.db("DATABASE_URL")
 }
 
 
@@ -115,14 +113,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+ROOT_DIR = (
+    environ.Path(__file__) - 3
+)
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'build/static'),
-    os.path.join(BASE_DIR, 'static')
-]
+STATIC_ROOT = str(ROOT_DIR("staticfiles"))
+STATIC_URL = "/static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join("..", "frontend", "build", "static")]
